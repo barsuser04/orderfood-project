@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { ReactComponent as BasketIcon } from "../../assets/icons//Basket.svg";
 
-const OrderBusket = ({ children }) => {
+const OrderBusket = ({ children, onClick }) => {
   return (
-    <Button>
+    <Button onClick={onClick}>
       <BasketIcon /> <OrderBasketTitle> {children}</OrderBasketTitle>
       <OrderBasketCount>7</OrderBasketCount>
     </Button>

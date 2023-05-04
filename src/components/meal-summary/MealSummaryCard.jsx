@@ -19,14 +19,18 @@ const MealSummaryCard = () => {
 };
 
 const Container = styled.div`
-  width: 854px;
+  max-width: 854px;
+  width: 100%;
   height: 270px;
+
   background-color: #383838;
   box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3);
   border-radius: 16px;
+
   position: absolute;
   z-index: 10;
   top: 358px;
+
   display: flex;
   flex-direction: column;
   gap: 30px;
