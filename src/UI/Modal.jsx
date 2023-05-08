@@ -11,10 +11,10 @@ const ModalContent = ({ children }) => {
   return <StyledModalContent>{children}</StyledModalContent>;
 };
 
-export const Modal = ({ children }) => {
+export const Modal = ({ children, onClose }) => {
   return (
     <>
-      {createPortal(<Backdrop />, backdropElement)}
+      {createPortal(<Backdrop onClose={onClose} />, backdropElement)}
       {createPortal(<ModalContent>{children}</ModalContent>, modalElement)}
     </>
   );

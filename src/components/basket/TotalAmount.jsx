@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../../UI/Button";
 import styled from "styled-components";
 
-const TotalAmount = ({ closeModalHandler, totalPrice, onClose, onOrder }) => {
+const TotalAmount = ({ totalPrice, onClose, onOrder }) => {
   const isOrderButton =
     totalPrice > 0 ? (
       <Button variant="contained" onClick={onOrder}>
@@ -19,7 +19,7 @@ const TotalAmount = ({ closeModalHandler, totalPrice, onClose, onOrder }) => {
       </TextContaner>
 
       <ButtonContainer>
-        <Button variant="outlined" onClick={closeModalHandler}>
+        <Button variant="outlined" onClick={onClose}>
           Close
         </Button>
         {isOrderButton}

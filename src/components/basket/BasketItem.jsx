@@ -3,8 +3,11 @@ import { Button } from "../../UI/Button";
 import styled from "styled-components";
 import { ReactComponent as Plus } from "../../assets/icons/plus.svg";
 import { ReactComponent as Minus } from "../../assets/icons/minus.svg";
+import { useContext } from "react";
+import { cartContext } from "../../store/cart-context";
 
-const BasketItem = ({ title, price, amount }) => {
+const BasketItem = ({ title, price, id, amount }) => {
+  const { addQuantity, minusQuantity } = useContext(cartContext);
   return (
     <Container>
       <h4>{title}</h4>
@@ -16,11 +19,13 @@ const BasketItem = ({ title, price, amount }) => {
 
         <ButtonBlock>
           <Button
+            onClick={() => minusQuantity(id)}
             borderRadius="squared"
             variant="outlined"
             icon={<Minus />}
           ></Button>
           <Button
+            onClick={() => addQuantity(id)}
             borderRadius="squared"
             variant="outlined"
             icon={<Plus />}

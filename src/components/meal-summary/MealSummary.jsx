@@ -26,6 +26,7 @@ const Container = styled.div`
 const Image = styled.div`
   width: 100%;
   height: 432px;
+  margin-top: 100px;
 
   img {
     width: 100%;

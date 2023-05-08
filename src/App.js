@@ -1,15 +1,24 @@
+import { useState } from "react";
 import "./App.css";
 import Header from "./components/header/Header";
 import MealSummary from "./components/meal-summary/MealSummary";
 import Meals from "./components/meals/Meals";
+import Basket from "./components/basket/Basket";
+import CartProvider from "./store/cart-context";
 
 function App() {
+  const [toggle, setToggle] = useState(false);
+  function toggleHandler() {
+    setToggle((prev) => !prev);
+  }
   return (
-    <div className="App">
-      <Header />
+    <CartProvider>
+      <Header onToggle={toggleHandler} />
       <MealSummary />
       <Meals />
-    </div>
+
+      {toggle && <Basket onToggle={toggleHandler} />}
+    </CartProvider>
   );
 }
 
