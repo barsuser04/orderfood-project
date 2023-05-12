@@ -8,6 +8,7 @@ import { cartContext } from "../../store/cart-context";
 
 const BasketItem = ({ title, price, id, amount }) => {
   const { addQuantity, minusQuantity } = useContext(cartContext);
+
   return (
     <Container>
       <h4>{title}</h4>
@@ -19,13 +20,13 @@ const BasketItem = ({ title, price, id, amount }) => {
 
         <ButtonBlock>
           <Button
-            onClick={() => minusQuantity(id)}
+            onClick={() => minusQuantity(id, amount)}
             borderRadius="squared"
             variant="outlined"
             icon={<Minus />}
           ></Button>
           <Button
-            onClick={() => addQuantity(id)}
+            onClick={() => addQuantity(id, amount)}
             borderRadius="squared"
             variant="outlined"
             icon={<Plus />}

@@ -1,4 +1,5 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
+import { fetchRequest } from "../lib/fetchAPI";
 
 export const cartContext = createContext({
   items: [],
@@ -9,57 +10,26 @@ export const cartContext = createContext({
 const cartReducer = (state, action) => {
   switch (action.type) {
     case "ADD_ITEM":
-      const isExist = state.items.find(
-        (item) => item.title === action.item.title
-      );
-      if (!isExist) {
-        return {
-          ...state,
-          items: [...state.items, action.item],
-          totalAmount: state.totalAmount + action.item.amount,
-        };
-      } else {
-        const updatedItems = state.items.map((item) => {
-          if (item.id === action.item.id) {
-            return {
-              ...item,
-              amount: item.amount + action.item.amount,
-            };
-          }
-          return item;
-        });
+      return {
+        ...state,
+        items: (state.items = action.payload),
+      };
 
-        return {
-          ...state,
-          items: updatedItems,
-          totalAmount: state.totalAmount + action.item.amount,
-        };
-      }
+    case "GET_ITEM":
+      return {
+        ...state,
+        items: (state.items = action.payload),
+      };
     case "ADD_QUANTITY":
       return {
         ...state,
-        items: state.items.map((item) => {
-          if (item.id === action.payload) {
-            return {
-              ...item,
-              amount: item.amount++,
-            };
-          }
-          return item;
-        }),
+        items: (state.items = action.payload),
       };
+
     case "MINUS_QUANTITY":
       return {
         ...state,
-        items: state.items.map((item) => {
-          if (item.id === action.payload) {
-            return {
-              ...item,
-              amount: item.amount--,
-            };
-          }
-          return item;
-        }),
+        items: (state.items = action.payload),
       };
 
     default:
@@ -74,30 +44,68 @@ const CartProvider = ({ children }) => {
     amount: 1,
   });
 
-  const totalPrice = cartState.items.reduce(
+  const addItem = async (id, amount) => {
+    try {
+      const response = await fetchRequest(`/foods/${id}/addToBasket`, {
+        method: "POST",
+        body: { amount: amount },
+      });
+
+      dispatch({ type: "ADD_ITEM", payload: response.items });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  async function getBasket() {
+    try {
+      const response = await fetchRequest("/basket");
+      dispatch({ type: "GET_ITEM", payload: response.items });
+    } catch (error) {
+      new Error(error);
+    }
+  }
+
+  const addQuantity = async (id, amount) => {
+    const responce = await fetchRequest(`/basketItem/${id}/update`, {
+      method: "PUT",
+      body: { amount: amount + 1 },
+    });
+    dispatch({ type: "ADD_QUANTITY", payload: responce.items });
+    getBasket();
+  };
+
+  const minusQuantity = async (id, amount) => {
+    if (amount !== 0) {
+      const responce = await fetchRequest(`/basketItem/${id}/update`, {
+        method: "PUT",
+        body: { amount: amount - 1 },
+      });
+
+      dispatch({ type: "MINUS_QUANTITY", payload: responce.items });
+      getBasket();
+    } else {
+      const responce = await fetchRequest(`/basketItem/${id}/delete`, {
+        method: "DELETE",
+      });
+
+      dispatch({ type: "MINUS_QUANTITY", payload: responce.items });
+    }
+  };
+
+  const totalPrice = cartState.items?.reduce(
     (prev, current) => prev + current.amount * current.price,
     0
   );
 
-  const addItem = (item) => {
-    dispatch({ type: "ADD_ITEM", item });
-  };
-
-  const addQuantity = (id) => {
-    console.log(id);
-    dispatch({ type: "ADD_QUANTITY", payload: id });
-  };
-
-  const orderAmount = cartState.items.reduce(
+  const orderAmount = cartState.items?.reduce(
     (prev, current) => prev + current.amount,
     0
   );
 
-  const minusQuantity = (id) => {
-    console.log(id);
-
-    dispatch({ type: "MINUS_QUANTITY", payload: id });
-  };
+  useEffect(() => {
+    getBasket();
+  }, []);
 
   const cartValue = {
     items: cartState.items,

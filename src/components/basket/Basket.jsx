@@ -18,8 +18,8 @@ const Basket = ({ onToggle }) => {
               if (item.amount > 0) {
                 return (
                   <BasketItem
-                    key={item.id}
-                    id={item.id}
+                    key={item._id}
+                    id={item._id}
                     title={item.title}
                     price={item.price}
                     amount={item.amount}

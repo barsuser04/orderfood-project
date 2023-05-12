@@ -1,13 +1,30 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
-import { DUMMY_MEALS } from "../../utils/constants";
 import MealItem from "./mealItem/MealItem";
+import { useEffect } from "react";
+import { useState } from "react";
+import { fetchRequest } from "../../lib/fetchAPI";
 
 const Meals = () => {
+  const [meals, setMeals] = useState();
+
+  async function getFoods() {
+    try {
+      const responce = await fetchRequest("/foods");
+      setMeals(responce);
+    } catch (error) {
+      new Error(error);
+    }
+  }
+
+  useEffect(() => {
+    getFoods();
+  }, []);
+
   return (
     <Container>
-      {DUMMY_MEALS.map((meal) => {
-        return <MealItem key={meal.id} meal={meal} />;
+      {meals?.map((meal) => {
+        return <MealItem key={meal._id} meal={meal} />;
       })}
     </Container>
   );
@@ -21,4 +38,4 @@ const Container = styled.div`
   padding: 40px;
 `;
 
-export default Meals;
+export default memo(Meals);

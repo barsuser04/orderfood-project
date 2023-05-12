@@ -3,7 +3,7 @@ import styled from "styled-components";
 import summaryImage from "../../assets/images/mealsFood.png";
 import MealSummaryCard from "./MealSummaryCard";
 
-const MealSummary = () => {
+const MealSummary = React.memo(() => {
   return (
     <Container>
       <Image>
@@ -12,7 +12,7 @@ const MealSummary = () => {
       <MealSummaryCard />
     </Container>
   );
-};
+});
 
 const Container = styled.div`
   width: 100%;
